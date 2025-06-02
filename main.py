@@ -67,7 +67,7 @@ async def monitor_and_send():
         print("❌ Invalid channel ID or bot lacks permissions.")
         return
 
-    print("🟢 Monitoring full screen for colored logs...")
+    print(" Monitoring full screen for colored logs...")
 
     while not client.is_closed():
         try:
@@ -86,7 +86,7 @@ async def monitor_and_send():
 
 @client.event
 async def on_ready():
-    print(f"🤖 Logged in as {client.user}")
+    print(f" Logged in as {client.user}")
     client.loop.create_task(monitor_and_send())
 
 client.run(TOKEN)
