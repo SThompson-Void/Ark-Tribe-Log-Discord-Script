@@ -19,21 +19,23 @@ CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 # autocorrect functionality via difflib sequencematcher
 EXPECTED_WORDS = [
     #lower case
-    "turret ", "destroyed ", "structure ", "tribe ", "killed ", "was ", "by ", "tamed ", "your ", "lvl ", "foundation ", "wall ", "tek ", "metal ", "wood ", "thatch ", "stone ", "bag ",
-    "your ", "tribe ", "killed ", "bag ", "auto-decay ", "sleeping ", "bag", "triangle",
+    "turret", "destroyed!", "structure", "tribe", "killed", "was", "by", "tamed", "your", "lvl", "foundation", "wall", "tek",
+    "metal", "wood", "thatch", "stone", "bag",
+    "your", "tribe", "killed", "bag", "auto-decay", "sleeping", "bag", "triangle", "pillar",
     #UPPER CASE
-    "TURRET", "DESTROYED", "STRUCTURE", "TRIBE", "KILLED", "WAS", "BY", "TAMED", "YOUR", "LVL",
+    "TURRET", "DESTROYED! ", "STRUCTURE", "TRIBE", "KILLED", "WAS", "BY", "TAMED", "YOUR", "LVL",
     "FOUNDATION", "WALL", "TEK", "METAL", "WOOD", "THATCH", "STONE", "BAG", "AUTO-DECAY", "SLEEPING", "TRIANGLE",
+    "PILLAR",
     #Pascal Case
-    "Turret", "Destroyed", "Structure", "Tribe", "Killed", "Was", "By", "Tamed", "Your", "Lvl",
+    "Turret", "Destroyed! ", "Structure", "Tribe", "Killed", "Was", "By", "Tamed", "Your", "Lvl",
     "Foundation", "Wall", "Tek", "Metal", "Wood", "Thatch", "Stone", "Bag",
-    "Auto-Decay", "Sleeping", "Triangle"
+    "Auto-Decay", "Sleeping", "Triangle", "Pillar"
 ]
 
 def similarity(a, b):
     return SequenceMatcher(None, a, b).ratio()
 
-def autocorrect_line(line, threshold=0.4):
+def autocorrect_line(line, threshold=0.50):
     words = line.split()
     corrected_words = []
 
