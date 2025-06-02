@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 import mss
 from dotenv import load_dotenv
+from difflib import SequenceMatcher
 
 # Path to Tesseract
 pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe'
@@ -14,6 +15,46 @@ pytesseract.pytesseract.tesseract_cmd = 'C:\\Program Files\\Tesseract-OCR\\tesse
 load_dotenv()
 TOKEN = os.getenv("DISCORD_TOKEN")
 CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
+
+# autocorrect functionality via difflib sequencematcher
+EXPECTED_WORDS = [
+    #lower case
+    "turret ", "destroyed ", "structure ", "tribe ", "killed ", "was ", "by ", "tamed ", "your ", "lvl ", "foundation ", "wall ", "tek ", "metal ", "wood ", "thatch ", "stone ", "bag ",
+    "your ", "tribe ", "killed ", "bag ", "auto-decay ", "sleeping ", "bag", "triangle",
+    #UPPER CASE
+    "TURRET", "DESTROYED", "STRUCTURE", "TRIBE", "KILLED", "WAS", "BY", "TAMED", "YOUR", "LVL",
+    "FOUNDATION", "WALL", "TEK", "METAL", "WOOD", "THATCH", "STONE", "BAG", "AUTO-DECAY", "SLEEPING", "TRIANGLE",
+    #Pascal Case
+    "Turret", "Destroyed", "Structure", "Tribe", "Killed", "Was", "By", "Tamed", "Your", "Lvl",
+    "Foundation", "Wall", "Tek", "Metal", "Wood", "Thatch", "Stone", "Bag",
+    "Auto-Decay", "Sleeping", "Triangle"
+]
+
+def similarity(a, b):
+    return SequenceMatcher(None, a, b).ratio()
+
+def autocorrect_line(line, threshold=0.4):
+    words = line.split()
+    corrected_words = []
+
+    for word in words:
+        best_match = word
+        best_score = 0
+
+        for target in EXPECTED_WORDS:
+            score = similarity(word.lower(), target)
+            if score > best_score:
+                best_score = score
+                best_match = target
+
+        # Replace if match is above threshold
+        if best_score >= threshold:
+            corrected_words.append(best_match)
+        else:
+            corrected_words.append(word)
+
+    return " ".join(corrected_words)
+
 
 # Track seen lines
 seen_lines = set()
@@ -67,8 +108,10 @@ async def monitor_and_send():
         print("Invalid channel ID or bot lacks permissions.")
         return
 
-    print(" Monitoring full screen for colored logs...")
-    logBeginningLineIndicator = "Your"
+    print("Monitoring full screen for colored logs...")
+    start_token = "Your"
+    end_token = "!"
+
     while not client.is_closed():
         try:
             lines = capture_colored_log_lines()
@@ -78,22 +121,34 @@ async def monitor_and_send():
             while i < len(new_lines):
                 line = new_lines[i]
 
-
-                if logBeginningLineIndicator in line:
-                    # Try to include the next line if it exists
-                    next_line = new_lines[i + 1] if i + 1 < len(new_lines) else ""
-                    message = f"<@everyone>\n```\n{line}\n{next_line}\n```"
-                    i += 2  # Skip both lines
-                else:
-                    # for single lines
-                    message = f"<@everyone>\n```\n{line}\n```"
+                # If this is the start of a new log group
+                if start_token in line:
+                    log_block = [line]
+                    seen_lines.add(line)
                     i += 1
 
-                await channel.send(message)
-                seen_lines.add(line)
-            if next_line:
-                seen_lines.add(next_line)
-            await asyncio.sleep(5)
+                    # Collect lines until we hit one that ends with '!'
+                    while i < len(new_lines) and end_token not in new_lines[i]:
+                        log_block.append(new_lines[i])
+                        seen_lines.add(new_lines[i])
+                        i += 1
+
+                    # Include the closing line with '!'
+                    if i < len(new_lines):
+                        log_block.append(new_lines[i])
+                        seen_lines.add(new_lines[i])
+                        i += 1
+
+                    #now we pass each line through the autocorrect function
+                    message = "\n".join(autocorrect_line(line) for line in log_block)
+                    await channel.send(f"<@everyone>\n```\n{message}\n```")
+
+                else:
+                    # Not part of a known log format; skip or handle individually
+                    seen_lines.add(line)
+                    i += 1
+
+            await asyncio.sleep(3)
 
         except Exception as e:
             print(f"Error: {e}")
