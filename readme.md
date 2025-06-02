@@ -12,9 +12,10 @@
 - A tribe on your server so you can view your tribelog
 - Github CLI to clone this project OR you can download the zip <>
 - Python: <https://www.python.org/downloads/>
-- Run the commands:
-  - `pip install python-dotenv`
-  - `pip install discord.py`
+- Run the command:
+  - `pip install python-dotenv && pip install discord && pip install opencv-python && pip install mss && pip install numpy && pip install pytesseract && pip install asyncio`
+-Also grab tesseract from here <https://github.com/UB-Mannheim/tesseract/wiki> and check that your path at the beginning of main.py matches your install path for tesseract
+-Find tesseract OCR root in your program files and copy that to your environment variable path
 
 ## Setup
 
