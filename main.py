@@ -75,14 +75,14 @@ async def monitor_and_send():
             new_lines = [line for line in lines if line not in seen_lines]
 
             for line in new_lines:
-                await channel.send(f"📜 **Tribe Log**:\n```\n{line}\n```")
+                await channel.send(f"<@everyone>\n```\n{line}\n```")
                 seen_lines.add(line)
 
-            await asyncio.sleep(5)
+            await asyncio.sleep(1)
 
         except Exception as e:
             print(f"⚠️ Error: {e}")
-            await asyncio.sleep(10)
+            await asyncio.sleep(5)
 
 @client.event
 async def on_ready():
