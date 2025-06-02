@@ -19,17 +19,17 @@ CHANNEL_ID = int(os.getenv("CHANNEL_ID"))
 # autocorrect functionality via difflib sequencematcher
 EXPECTED_WORDS = [
     #lower case
-    "turret", "destroyed!", "structure", "tribe", "killed", "was", "by", "tamed", "your", "lvl", "foundation", "wall", "tek",
-    "metal", "wood", "thatch", "stone", "bag",
+    "turret", "destroyed!", "structure", "tribe", "killed", "was", "by", "your", "lvl", "foundation", "wall", "tek",
+    "metal", "wood", "thatch", "stone", "bag", "(the"
     "your", "tribe", "killed", "bag", "auto-decay", "sleeping", "bag", "triangle", "pillar",
     #UPPER CASE
-    "TURRET", "DESTROYED! ", "STRUCTURE", "TRIBE", "KILLED", "WAS", "BY", "TAMED", "YOUR", "LVL",
+    "TURRET", "DESTROYED! ", "STRUCTURE", "TRIBE", "KILLED", "WAS", "BY", "YOUR", "LVL",
     "FOUNDATION", "WALL", "TEK", "METAL", "WOOD", "THATCH", "STONE", "BAG", "AUTO-DECAY", "SLEEPING", "TRIANGLE",
-    "PILLAR",
+    "PILLAR", "(THE"
     #Pascal Case
-    "Turret", "Destroyed! ", "Structure", "Tribe", "Killed", "Was", "By", "Tamed", "Your", "Lvl",
+    "Turret", "Destroyed! ", "Structure", "Tribe", "Killed", "Was", "By", "Your", "Lvl",
     "Foundation", "Wall", "Tek", "Metal", "Wood", "Thatch", "Stone", "Bag",
-    "Auto-Decay", "Sleeping", "Triangle", "Pillar"
+    "Auto-Decay", "Sleeping", "Triangle", "Pillar", "(The"
 ]
 
 def similarity(a, b):
