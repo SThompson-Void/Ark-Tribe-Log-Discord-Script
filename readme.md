@@ -29,15 +29,14 @@
     CHANNEL_ID=123456789012345678
   ```
 
-5. Open OBS and set your screen capture window to Ark: Survival Evolved/Ascended
-6. Run main.py
-7. Go back to Ark and Open the Tribe Log section
-8. AFK on the Tribe Log Screen and that's it!
-9. To kill the script you can kill it in task manager, close ark, or close OBS!
+5. Run main.py
+6. Go back to Ark and Open the Tribe Log section
+7. AFK on the Tribe Log Screen and that's it!
+8. To kill the script you can kill it in task manager, close ark, or close OBS!
 
 ## How this Script Works / Architecture
 
-OBS (game capture)
+Screen Set to Ark Log to Be Captured
       ↓ (displayed content)
 Python script (screen capture)
       ↓
@@ -54,7 +53,6 @@ If your script is not working, check over these:
 -you pasted the code from step #4 into that `.env` file
 -you replaced DISCORD_TOKEN=... in `.env` with your real discord bot's token from requirements section
 -you replaced CHANNEL_ID=... in `.env` with the correct channel ID from requirements section
--you have OBS set to target window Ark
 -you are ACTUALLY running the script
 -you are AFKing with the tribe log window open in Ark
 -you did not get kicked from server for AFK, etc.
