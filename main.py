@@ -64,7 +64,7 @@ async def monitor_and_send():
     channel = client.get_channel(CHANNEL_ID)
 
     if channel is None:
-        print("❌ Invalid channel ID or bot lacks permissions.")
+        print("Invalid channel ID or bot lacks permissions.")
         return
 
     print(" Monitoring full screen for colored logs...")
@@ -81,7 +81,7 @@ async def monitor_and_send():
             await asyncio.sleep(1)
 
         except Exception as e:
-            print(f"⚠️ Error: {e}")
+            print(f"Error: {e}")
             await asyncio.sleep(5)
 
 @client.event
