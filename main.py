@@ -68,17 +68,32 @@ async def monitor_and_send():
         return
 
     print(" Monitoring full screen for colored logs...")
-
+    logBeginningLineIndicator = "Your"
     while not client.is_closed():
         try:
             lines = capture_colored_log_lines()
             new_lines = [line for line in lines if line not in seen_lines]
 
-            for line in new_lines:
-                await channel.send(f"<@everyone>\n```\n{line}\n```")
-                seen_lines.add(line)
+            i = 0
+            while i < len(new_lines):
+                line = new_lines[i]
 
-            await asyncio.sleep(1)
+
+                if logBeginningLineIndicator in line:
+                    # Try to include the next line if it exists
+                    next_line = new_lines[i + 1] if i + 1 < len(new_lines) else ""
+                    message = f"<@everyone>\n```\n{line}\n{next_line}\n```"
+                    i += 2  # Skip both lines
+                else:
+                    # for single lines
+                    message = f"<@everyone>\n```\n{line}\n```"
+                    i += 1
+
+                await channel.send(message)
+                seen_lines.add(line)
+            if next_line:
+                seen_lines.add(next_line)
+            await asyncio.sleep(5)
 
         except Exception as e:
             print(f"Error: {e}")
